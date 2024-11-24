@@ -49,7 +49,7 @@ const Home = () => {
   const handleSend = async () => {
     if (input.trim()) {
       const userMessage = { text: input, sender: 'user' };
-      setMessages(prev => [...prev, userMessage]);
+      setMessages((prev) => [...prev, userMessage]);
       setInput('');
 
       // Send the message to backend
@@ -66,13 +66,13 @@ const Home = () => {
         const { chatResponse, report } = response.data;
 
         // Update chat messages
-        setMessages(prev => [...prev, { text: chatResponse, sender: 'ai' }]);
+        setMessages((prev) => [...prev, { text: chatResponse, sender: 'ai' }]);
 
         // Update report section
         setReportSection(report);
       } catch (error) {
         console.error('Error communicating with backend:', error);
-        setMessages(prev => [...prev, { text: "Sorry, something went wrong. Please try again.", sender: 'ai' }]);
+        setMessages((prev) => [...prev, { text: "Sorry, something went wrong. Please try again.", sender: 'ai' }]);
       }
     }
   };
@@ -145,7 +145,7 @@ const Home = () => {
               isOpen={isDataModalOpen}
               onDismiss={closeDataModal}
               isBlocking={false}
-              styles={{ main: { padding: '20px', maxWidth: '800px' } }}
+              styles={{ main: { padding: '20px', maxWidth: '1200px' } }}
             >
               <Stack tokens={{ childrenGap: 20 }}>
                 <Text variant="large" styles={{ root: { fontWeight: 'bold' } }}>
@@ -168,7 +168,10 @@ const Home = () => {
 
               {reportGenerated ? (
                 <div className="flex flex-col flex-1 bg-white rounded-xl shadow-md p-6">
-                  <div className="flex-1 overflow-auto space-y-4 mb-4">
+                  <div
+                    className="flex-1 overflow-auto space-y-4 mb-4"
+                    style={{ maxHeight: '500px', overflowY: 'auto' }}
+                  >
                     {messages.map((message, index) => (
                       <div
                         key={index}
@@ -217,18 +220,19 @@ const Home = () => {
                 <div className="bg-white rounded-xl shadow-md p-6">
                   <h3 className="text-lg font-semibold mb-4 text-gray-700">Report Insights</h3>
                   {reportSection.text && <p className="mb-4 text-gray-700">{reportSection.text}</p>}
-                  {reportSection.charts && reportSection.charts.map((chart, idx) => (
-                    <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
-                      <ReBarChart data={chart.data}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        <XAxis dataKey={chart.xAxis} stroke="#888" />
-                        <YAxis stroke="#888" />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey={chart.dataKey} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                      </ReBarChart>
-                    </ResponsiveContainer>
-                  ))}
+                  {reportSection.charts &&
+                    reportSection.charts.map((chart, idx) => (
+                      <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+                        <ReBarChart data={chart.data}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                          <XAxis dataKey={chart.xAxis} stroke="#888" />
+                          <YAxis stroke="#888" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey={chart.dataKey} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                        </ReBarChart>
+                      </ResponsiveContainer>
+                    ))}
                 </div>
               </>
             )}
