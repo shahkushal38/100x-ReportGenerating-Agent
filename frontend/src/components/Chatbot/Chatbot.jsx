@@ -39,13 +39,17 @@ export function Chatbot() {
         <DeepChat
           onMessage={handleMessage}
           introMessage={{
-            text: "This is a demo. Please upload your file and enter your prompt",
+            text: "Hey! I am Aakar! How can I help you today?",
           }}
           //   demo={{ response: handleResponse }}
-          requestInterceptor={handleResponse}
-          onSubmit={handleSubmit}
+          // requestInterceptor={handleResponse}
+          // onSubmit={handleSubmit}
+          connect={{
+            url: "http://127.0.0.1:5000/api/chat",
+            method: "POST",
+          }}
           mixedFiles={true}
-            style={{ height: "100%", width: "500px" }}
+          style={{ height: "100%", width: "400px" }}
         />
       </StackItem>
 
