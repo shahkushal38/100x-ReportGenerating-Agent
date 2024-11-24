@@ -1,67 +1,47 @@
-import React, { useState } from 'react';
-import { Modal, Text, Stack, CommandButton } from '@fluentui/react';
+// src/components/Header.js
 
-const headerStyles = {
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 16px',
-    backgroundColor: '#0078d4',
-    color: 'white',
-    height: '60px',
-  },
-};
+import React from 'react';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
+import { Logout } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 
-const buttonStyles = {
-  root: {
-    marginRight: '16px',
-  },
-  rootHovered: {
-    color: 'white',
-  }
-};
+const Header = () => {
+  const isLoggedIn = !!localStorage.getItem('token');
+  const navigate = useNavigate();
 
-const modalStyles = {
-  main: {
-    padding: '20px',
-    maxWidth: '400px',
-  },
-};
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
-export const HeaderWithModal = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   return (
-    <>
-      <header style={headerStyles.root}>
-        <Text variant="xLarge" styles={{ root: { fontWeight: 'bold' } }}>
-          Reporting Agent
-        </Text>
-        <CommandButton text="Upload Data" styles={buttonStyles}  onClick={openModal} />
-      </header>
+    <AppBar position="static">
+      <Toolbar>
+        {/* Logo or Icon */}
+        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+          <MenuIcon />
+        </IconButton>
 
-      <Modal
-        isOpen={isModalOpen}
-        onDismiss={closeModal}
-        isBlocking={false}
-        styles={modalStyles}
-      >
-        <Stack tokens={{ childrenGap: 15 }}>
-          <Text variant="large" styles={{ root: { fontWeight: 'bold' } }}>
-            Modal Title
-          </Text>
-          <Text>
-            This is a modal using Fluent UI. You can customize its content as
-            needed.
-          </Text>
-        </Stack>
-      </Modal>
-    </>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Report Generating Agent
+        </Typography>
+        {isLoggedIn ? (
+          <Button color="inherit" onClick={handleLogout} startIcon={<Logout />}>
+            Logout
+          </Button>
+        ) : (
+          <Button color="inherit" onClick={handleLogin}>
+            Login
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 
-export default HeaderWithModal;
+export default Header;
