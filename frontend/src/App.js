@@ -3,6 +3,7 @@ import "./App.css";
 import { Dashboard } from "./components/GridLayout/GridLayout";
 import HeaderWithModal from "./components/Header/Header";
 import { Chatbot } from "./components/Chatbot/Chatbot";
+import Table from "./components/Table/Table";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         </StackItem> */}
 
         <StackItem>
-          <Chatbot />
+          <Table />
         </StackItem>
       </Stack>
     </div>

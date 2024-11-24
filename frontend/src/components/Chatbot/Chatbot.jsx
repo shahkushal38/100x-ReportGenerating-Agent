@@ -4,69 +4,33 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BarChart } from "../GridLayout/Charts";
 
 export function Chatbot() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [isChartVisible, setIsChartVisible] = useState(false);
-  const [panelText, setIsPanelText] = useState("");
-
-  const initialMessages = [
-    // { role: "user", text: "Hey, how are you today?" },
-    { role: "ai", text: "Hey! I am Aakar! How can I help you today?" },
-    {
-      role: "ai",
-      html: "<p> Ask me anything related to - <br></p><ul><li>Give me a course related to python</li><li>Provide the summary of the course 'Python Fundamentals'</li><li>Test my knowledge</li><li>Ask anything</li></ul>",
-    },
-  ];
+  const [panelText, setPanelText] = useState("");
+  const panelTextRef = useRef("");
   const chatElementRef = useRef(null);
 
   const dismissPanel = useCallback(() => {
     setIsModalOpen(false);
   }, []);
 
-  const handleMessage = useCallback((data) => {
-    console.log("In Message - ", data);
-    if (data.message.role === "user") {
-      setIsModalOpen(true);
-    }
-  }, []);
-
-  const handleResponse = useCallback((data) => {
-    console.log("In response - ", data);
-    setIsPanelText(data.body.messages[0].text);
-    setIsChartVisible(true);
-    return {
-      text: "This is mock Response",
-      user: "ai",
-    };
-  }, []);
-
-  const handleSubmit = useCallback((ev) => {
-    ev.preventDefault();
-  }, []);
+  useEffect(() => {
+    console.log("paneltextref useffect");
+    setPanelText(panelTextRef.current);
+  }, [panelTextRef]);
 
   useEffect(() => {
     if (chatElementRef.current) {
-      // chatElementRef.current.messageStyles = {
-      //   html: {
-      //     shared: {
-      //       bubble: {
-      //         backgroundColor: "unset",
-      //         padding: "0px",
-      //         width: "100%",
-      //         textAlign: "right",
-      //       },
-      //     },
-      //   },
-      // };
-
-      // chatElementRef.current.submitButtonStyles = {
-      //   disabled: { container: { default: { opacity: 0, cursor: "auto" } } },
-      // };
-
       chatElementRef.current.onNewMessage = ({ message, isInitial }) => {
-        console.log("checking isinitial - ",isInitial)
-        setIsModalOpen(true);
-        setIsPanelText(message.text);
-        setIsChartVisible(true);
+        console.log("checking isinitial - ", isInitial);
+        if (!isInitial && message.role === "ai") {
+          // setIsModalOpen(true);
+          panelTextRef.current = message.text;
+          setPanelText(message.text);
+          // setIsChartVisible(true);
+          // console.log("paneltextref here", panelTextRef.current);
+        }
+
         const allMessages = chatElementRef.current.getMessages();
         if (
           !isInitial &&
@@ -90,35 +54,10 @@ export function Chatbot() {
             </div>`,
           });
         }
-
-        // if (
-        //   !isInitial &&
-        //   allMessages.length !== 0 &&
-        //   allMessages[allMessages.length - 2].role === "ai" &&
-        //   allMessages[allMessages.length - 2].html &&
-        //   allMessages[allMessages.length - 2].html.search(/<button/g) !== -1 &&
-        //   allMessages[allMessages.length - 2].html.match(/<button/g).length >= 4
-        // ) {
-        //   const correctAnsMatch = allMessages[
-        //     allMessages.length - 2
-        //   ].html.match(/<button id="correct-ans"[^>]*>(.*?)<\/button>/);
-        //   if (correctAnsMatch && correctAnsMatch[1]) {
-        //     if (message.text === correctAnsMatch[1]) {
-        //       chatElementRef.current._addMessage({
-        //         text: "Woah! You nailed it!",
-        //         role: "ai",
-        //       });
-        //     } else {
-        //       chatElementRef.current._addMessage({
-        //         text: `Uh Oh! the correct answer was - "${correctAnsMatch[1]}"`,
-        //         role: "ai",
-        //       });
-        //     }
-        //   }
-        // }
       };
 
       chatElementRef.current.responseInterceptor = (a) => {
+        console.log("coming here too - ", a);
         return a[0];
       };
     }
@@ -129,11 +68,7 @@ export function Chatbot() {
       <StackItem>
         <DeepChat
           ref={chatElementRef}
-          // onMessage={handleMessage}
-          introMessage = {{"text":"Hey! I am Aakar! How can I help you today?"}}
-          //   demo={{ response: handleResponse }}
-          // requestInterceptor={handleResponse}
-          // onSubmit={handleSubmit}
+          introMessage={{ text: "Hey! I am Aakar! How can I help you today?" }}
           connect={{
             url: "http://127.0.0.1:5000/api/chat",
             method: "POST",
@@ -144,7 +79,8 @@ export function Chatbot() {
       </StackItem>
 
       <StackItem>
-        <Panel 
+        <Panel
+          isBlocking={false}
           headerText="Report"
           isOpen={isModalOpen}
           onDismiss={dismissPanel}
@@ -155,7 +91,7 @@ export function Chatbot() {
             subComponentStyles: {
               closeButton: {
                 root: {
-                  backgroundColor: "black",
+                  backgroundColor: "white",
                 },
               },
             },
@@ -164,11 +100,12 @@ export function Chatbot() {
           <Stack>
             <StackItem>{isChartVisible && <BarChart />}</StackItem>
             <StackItem>
-              {panelText.length > 0 && <Text>{panelText}</Text>}
+              {/* {panelText && <Text>{panelText}</Text>} */}
+              {panelText && <Text>{panelText}</Text>}
             </StackItem>
           </Stack>
         </Panel>
-      </StackItem> 
+      </StackItem>
     </Stack>
   );
 }
