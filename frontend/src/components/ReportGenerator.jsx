@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import {
-  BarChart as ReBarChart,
+  BarChart,
   Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -39,6 +43,7 @@ const Home = () => {
   const [input, setInput] = useState("");
   const [reportSection, setReportSection] = useState(null);
   const [connectedData, setConnectedData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Open/Close Data Ingestion Modal
   const openDataModal = () => setIsDataModalOpen(true);
@@ -80,11 +85,11 @@ const Home = () => {
   // Handle sending user message
   const handleSend = async () => {
     if (input.trim()) {
+      setIsLoading(true);
       const userMessage = { text: input, sender: "user" };
       setMessages((prev) => [...prev, userMessage]);
       setInput("");
 
-      // Send the message to backend
       try {
         const token = localStorage.getItem("token");
         const response = await axios.post(
@@ -101,16 +106,13 @@ const Home = () => {
 
         const { chatResponse, report } = response.data;
 
-        // Update chat messages
         setMessages((prev) => [
           ...prev,
           { text: chatResponse, sender: "ai", type: "normal" },
         ]);
-
-        // Update report section
         setReportSection(report);
       } catch (error) {
-        console.error("Error communicating with backend:", error);
+        console.error("Error:", error);
         setMessages((prev) => [
           ...prev,
           {
@@ -119,6 +121,8 @@ const Home = () => {
             type: "normal",
           },
         ]);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -149,9 +153,9 @@ const Home = () => {
   const handleDataCleaningTask = async (text, i, filepath, indexDir) => {
     console.log("text given clean - ", text, i, filepath, indexDir);
     let req_data = {};
-    if (i == 0) {
+    if (i === 0) {
       req_data["type"] = "outlier";
-    } else if (i == 1) {
+    } else if (i === 1) {
       req_data["type"] = "missing";
     } else {
       req_data["type"] = "duplicate";
@@ -164,7 +168,7 @@ const Home = () => {
       req_data
     );
 
-    if (response.status == 200) {
+    if (response.status === 200) {
       const { message, viewer } = response.data;
       setMessages((prev) => [
         ...prev,
@@ -188,6 +192,68 @@ const Home = () => {
           type: "normal",
         },
       ]);
+    }
+  };
+
+  // Function to render different chart types
+  const renderChart = (chart, idx) => {
+    const commonProps = {
+      data: chart.data,
+      margin: { top: 20, right: 30, left: 20, bottom: 5 },
+    };
+
+    switch (chart.type.toLowerCase()) {
+      case "bar":
+        return (
+          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+            <BarChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey={chart.xAxis} stroke="#888" />
+              <YAxis stroke="#888" />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey={chart.dataKey} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        );
+      case "line":
+        return (
+          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+            <LineChart {...commonProps}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey={chart.xAxis} stroke="#888" />
+              <YAxis stroke="#888" />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey={chart.dataKey} stroke="#82ca9d" />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      case "pie":
+        return (
+          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+            <PieChart>
+              <Tooltip />
+              <Legend />
+              <Pie
+                data={chart.data}
+                dataKey={chart.dataKey}
+                nameKey={chart.xAxis}
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                fill="#8884d8"
+                label
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        );
+      default:
+        return (
+          <div key={idx} className="mb-6 text-red-500">
+            Unsupported chart type: {chart.type}
+          </div>
+        );
     }
   };
 
@@ -253,9 +319,7 @@ const Home = () => {
           {/* Chat Section */}
           <div className="flex-1 border-r border-gray-200">
             <div className="p-8 h-full flex flex-col">
-              <h1 className="text-3xl font-bold mb-8 text-gray-800">
-                Aakar AI
-              </h1>
+              <h1 className="text-3xl font-bold mb-8 text-gray-800">Aakar AI</h1>
 
               {reportGenerated ? (
                 <div className="flex flex-col flex-1 bg-white rounded-xl shadow-md p-6">
@@ -305,7 +369,7 @@ const Home = () => {
                         );
                       } else if (message.type === "array buttons") {
                         return (
-                          <>
+                          <div key={index}>
                             {message.text.map((item, i) => (
                               <button
                                 key={i}
@@ -333,7 +397,7 @@ const Home = () => {
                                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                                   cursor: "pointer",
                                   textAlign: "left",
-                                  width: "100%",
+                                  width: "99%",
                                   maxWidth: "400px",
                                   wordWrap: "break-word",
                                   transition: "all 0.3s ease",
@@ -359,7 +423,7 @@ const Home = () => {
                                 {item}
                               </button>
                             ))}
-                          </>
+                          </div>
                         );
                       } else {
                         // Default for 'normal' and other types
@@ -410,7 +474,7 @@ const Home = () => {
           </div>
 
           {/* Right Sidebar - Report Display */}
-          <div className="w-96 p-8">
+          <div className="w-96 p-8 overflow-y-auto">
             {reportSection && (
               <>
                 <div className="mb-6">
@@ -429,30 +493,7 @@ const Home = () => {
                     <p className="mb-4 text-gray-700">{reportSection.text}</p>
                   )}
                   {reportSection.charts &&
-                    reportSection.charts.map((chart, idx) => (
-                      <ResponsiveContainer
-                        key={idx}
-                        width="100%"
-                        height={300}
-                        className="mb-6"
-                      >
-                        <ReBarChart data={chart.data}>
-                          <CartesianGrid
-                            strokeDasharray="3 3"
-                            stroke="#f0f0f0"
-                          />
-                          <XAxis dataKey={chart.xAxis} stroke="#888" />
-                          <YAxis stroke="#888" />
-                          <Tooltip />
-                          <Legend />
-                          <Bar
-                            dataKey={chart.dataKey}
-                            fill="#8b5cf6"
-                            radius={[4, 4, 0, 0]}
-                          />
-                        </ReBarChart>
-                      </ResponsiveContainer>
-                    ))}
+                    reportSection.charts.map((chart, idx) => renderChart(chart, idx))}
                 </div>
               </>
             )}
