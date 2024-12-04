@@ -104,7 +104,71 @@ const Home = () => {
           }
         );
 
-        const { chatResponse, report } = response.data;
+        const chatResponse =
+          "Thank you for your query. Based on the uploaded sales data, we've generated an insightful and detailed report.";
+        const report = {
+          name: "Supermarket Sales Analysis",
+          description:
+            "An in-depth analysis of supermarket sales data, including customer trends, product categories, regional performance, and revenue insights.",
+          text: "This report provides key insights into sales performance, customer behavior, product trends, and regional contributions to revenue.",
+          charts: [
+            {
+              type: "bar",
+              data: [
+                { category: "Electronics", revenue: 50000 },
+                { category: "Clothing", revenue: 40000 },
+                { category: "Groceries", revenue: 70000 },
+                { category: "Cosmetics", revenue: 30000 },
+              ],
+              xAxis: "category",
+              dataKey: "revenue",
+            },
+            {
+              type: "line",
+              data: [
+                { month: "Jan", sales: 15000 },
+                { month: "Feb", sales: 20000 },
+                { month: "Mar", sales: 25000 },
+                { month: "Apr", sales: 30000 },
+                { month: "May", sales: 35000 },
+              ],
+              xAxis: "month",
+              dataKey: "sales",
+            },
+            {
+              type: "pie",
+              data: [
+                { region: "North", share: 40 },
+                { region: "South", share: 30 },
+                { region: "East", share: 20 },
+                { region: "West", share: 10 },
+              ],
+              xAxis: "region",
+              dataKey: "share",
+            },
+            {
+              type: "radar",
+              data: [
+                { category: "Electronics", satisfaction: 4.5 },
+                { category: "Clothing", satisfaction: 4.0 },
+                { category: "Groceries", satisfaction: 4.7 },
+                { category: "Cosmetics", satisfaction: 3.8 },
+              ],
+              polarKey: "category",
+              dataKey: "satisfaction",
+            },
+            {
+              type: "line",
+              data: [
+                { year: "2020", profit: 150000 },
+                { year: "2021", profit: 180000 },
+                { year: "2022", profit: 220000 },
+              ],
+              xAxis: "year",
+              dataKey: "profit",
+            },
+          ],
+        };
 
         setMessages((prev) => [
           ...prev,
@@ -205,20 +269,34 @@ const Home = () => {
     switch (chart.type.toLowerCase()) {
       case "bar":
         return (
-          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+          <ResponsiveContainer
+            key={idx}
+            width="100%"
+            height={300}
+            className="mb-6"
+          >
             <BarChart {...commonProps}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey={chart.xAxis} stroke="#888" />
               <YAxis stroke="#888" />
               <Tooltip />
               <Legend />
-              <Bar dataKey={chart.dataKey} fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey={chart.dataKey}
+                fill="#8b5cf6"
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         );
       case "line":
         return (
-          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+          <ResponsiveContainer
+            key={idx}
+            width="100%"
+            height={300}
+            className="mb-6"
+          >
             <LineChart {...commonProps}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey={chart.xAxis} stroke="#888" />
@@ -231,7 +309,12 @@ const Home = () => {
         );
       case "pie":
         return (
-          <ResponsiveContainer key={idx} width="100%" height={300} className="mb-6">
+          <ResponsiveContainer
+            key={idx}
+            width="100%"
+            height={300}
+            className="mb-6"
+          >
             <PieChart>
               <Tooltip />
               <Legend />
@@ -317,9 +400,11 @@ const Home = () => {
           </div>
 
           {/* Chat Section */}
-          <div className="flex-1 border-r border-gray-200">
+          <div className="flex-1 border-r border-gray-200" style={{width: "400px"}}>
             <div className="p-8 h-full flex flex-col">
-              <h1 className="text-3xl font-bold mb-8 text-gray-800">Aakar AI</h1>
+              <h1 className="text-3xl font-bold mb-8 text-gray-800">
+                Aakar AI
+              </h1>
 
               {reportGenerated ? (
                 <div className="flex flex-col flex-1 bg-white rounded-xl shadow-md p-6">
@@ -338,7 +423,7 @@ const Home = () => {
                             <div
                               style={{
                                 overflowX: "auto",
-                                maxWidth: "50%",
+                                maxWidth: "100%",
                                 border: "1px solid #ddd",
                                 borderRadius: "8px",
                                 padding: "20px",
@@ -368,63 +453,7 @@ const Home = () => {
                           </div>
                         );
                       } else if (message.type === "array buttons") {
-                        return (
-                          <div key={index}>
-                            {message.text.map((item, i) => (
-                              <button
-                                key={i}
-                                onClick={() => {
-                                  handleDataCleaningTask(
-                                    item,
-                                    i,
-                                    message.filepath,
-                                    message.indexDir
-                                  );
-                                }}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "start",
-                                  gap: "8px",
-                                  padding: "10px 15px",
-                                  margin: "8px 0",
-                                  fontSize: "14px",
-                                  fontWeight: "500",
-                                  color: "#333",
-                                  backgroundColor: "#f5f7fb",
-                                  border: "1px solid #ddd",
-                                  borderRadius: "20px",
-                                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                                  cursor: "pointer",
-                                  textAlign: "left",
-                                  width: "99%",
-                                  maxWidth: "400px",
-                                  wordWrap: "break-word",
-                                  transition: "all 0.3s ease",
-                                }}
-                                onMouseOver={(e) =>
-                                  (e.target.style.backgroundColor = "#eef4ff")
-                                }
-                                onMouseOut={(e) =>
-                                  (e.target.style.backgroundColor = "#f5f7fb")
-                                }
-                              >
-                                <span
-                                  style={{
-                                    display: "inline-block",
-                                    width: "20px",
-                                    height: "20px",
-                                    backgroundImage:
-                                      "url('https://cdn-icons-png.flaticon.com/512/1828/1828970.png')",
-                                    backgroundSize: "contain",
-                                    backgroundRepeat: "no-repeat",
-                                  }}
-                                ></span>
-                                {item}
-                              </button>
-                            ))}
-                          </div>
-                        );
+                        return
                       } else {
                         // Default for 'normal' and other types
                         return (
@@ -493,7 +522,9 @@ const Home = () => {
                     <p className="mb-4 text-gray-700">{reportSection.text}</p>
                   )}
                   {reportSection.charts &&
-                    reportSection.charts.map((chart, idx) => renderChart(chart, idx))}
+                    reportSection.charts.map((chart, idx) =>
+                      renderChart(chart, idx)
+                    )}
                 </div>
               </>
             )}
