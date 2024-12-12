@@ -8,6 +8,7 @@ import ReportGenerator from "./components/ReportGenerator";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Header from "./components/Header/Header";
 import Table from "./components/Table/Table";
+import { PricingComponent } from "./components/PricingComponent/PricingComponent";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             }
           />
           <Route path="/table" element={<Table />} />
+          <Route path="/pricingComponent" element={<PricingComponent />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
