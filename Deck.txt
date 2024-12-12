@@ -41,3 +41,19 @@ Slide 5 - Buildathon Journey
 
 SLide 6 - Future Projections
 
+If sufficient capital and time are invested into solving the problem of building an intelligent, customizable report-generating agent, it could evolve into a highly scalable, impactful, and profitable AI-powered reporting ecosystem
+
+1) Market Penetration: The global business intelligence (BI) and analytics software market was valued at $30 billion in 2023 and is projected to grow to $55 billion by 2030 (CAGR ~9.2%). A mature system could capture 2%-5% of this market, equating to annual revenues of $1-$2.75 billion.
+
+2) Customer Base: By targeting mid-sized businesses, the platform could serve 200,000-500,000 paying customers globally.
+
+3) An Industry-Agnostic Tool: The platform could cater to industries like healthcare, finance, retail, education, manufacturing, and logistics, providing domain-specific insights.
+
+4) Real-Time Insights Hub: With advanced AI (e.g., LLMs like LLama Index), the platform could evolve into a real-time decision-making hub with capabilities like:
+
+Predictive analytics for future trends.
+Prescriptive analytics offering actionable recommendations.
+Multilingual support for global users.
+
+The global AI market is projected to reach $1.8 trillion by 2030. As a player in this market, a well-built reporting system could capture $500 million-$1 billion annually in value by offering industry-focused AI solutions.
+
