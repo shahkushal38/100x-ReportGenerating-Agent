@@ -1,0 +1,43 @@
+Slide 1 : Problem
+
+Subtitle - Build a Report Generating Agent using Llama Index
+
+Problem Statement
+In a data-driven world, generating clear and concise reports from raw (structured/unstructured) data is a repetitive and time-consuming task. Further it is even more time consuming to customize reports, selecting specific data ranges, filtering criteria, or choose visualizations.
+
+Challenges 
+- Managing large datasets efficiently without performance degradation.
+- Detecting and analyzing relationships or trends in complex structured data.
+- Crafting clear and human-readable text summarizing insights and aesthetically pleasing charts, graphs, and tables in a way that is understandable to non-technical users.
+
+
+Slide 2 - Solution
+
+Subtitle: An AI powered intelligent Reporting agent
+
+Solution Overview:
+We have developed an AI powered intelligent agent that can analyze structured and unstructured data, extract meaningful insights, and generate customizable reports in natural language. The agent is able to handle different input formats (e.g., Excel, CSV, JSON, or databases) and provide user-friendly options for report customization
+
+Unique value proposition:
+- seamless integration with external data sources (APIs, cloud storage, databases).
+- Parsing and standardizing data from various formats (Excel, CSV, JSON, databases) while ensuring no loss of information.
+- Accurately identifying key insights from unstructured data, such as text, while maintaining context.
+- Customizing analysis based on domain knowledge (e.g., finance, healthcare) to make insights more relevant.
+
+Benefits:
+- 73% of companies struggle to turn data into actionable insights. This system can eliminate that barrier by providing ready-to-use insight and improve decision-making
+- Users can generate 10-15 different types of charts and graphs, including bar charts, pie charts, scatter plots, etc.
+- Eliminates up to 90% of human errors associated with manual data analysis and reporting.
+- Unlike manual processes, the system scales effortlessly to handle up to 10x the data volume without proportional cost increases.
+
+
+Slide 3 - Product Demo 
+Workflow Diagram
+
+
+Slide 4 - Traction
+
+Slide 5 - Buildathon Journey
+
+SLide 6 - Future Projections
+
